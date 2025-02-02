@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"projekt/internal/models"
 )
 
@@ -30,4 +31,24 @@ func (r *Repository) GetAll() []models.User {
 	}
 
 	return users
+}
+
+func (r *Repository) GetUserById(id int) (models.User, error) {
+	user, exists := r.Users[id]
+
+	if !exists {
+		return models.User{}, errors.New("user not found")
+	}
+
+	return user, nil
+}
+
+func (r *Repository) DeleteUser(id int) error {
+	_, exists := r.Users[id]
+	if !exists {
+		return errors.New("user not found")
+	}
+	delete(r.Users, id)
+
+	return nil
 }
