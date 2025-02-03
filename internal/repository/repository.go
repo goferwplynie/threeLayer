@@ -60,7 +60,7 @@ func MergeUsers(userToEdit *models.User, updates models.User) {
 
 	for i := 0; i < updateValues.NumField(); i++ {
 		field := updateValues.Field(i)
-		if field.IsValid() && !field.IsZero() {
+		if field.IsValid() {
 			existingValues.Field(i).Set(field)
 		}
 	}
