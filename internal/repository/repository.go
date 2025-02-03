@@ -3,6 +3,7 @@ package repository
 import (
 	"errors"
 	"projekt/internal/models"
+	"reflect"
 )
 
 type Repository struct {
@@ -24,7 +25,7 @@ func (r *Repository) AddUser(user models.User) {
 }
 
 func (r *Repository) GetAll() []models.User {
-	users := make([]models.User, len(r.Users))
+	users := []models.User{}
 
 	for _, v := range r.Users {
 		users = append(users, v)
@@ -50,5 +51,29 @@ func (r *Repository) DeleteUser(id int) error {
 	}
 	delete(r.Users, id)
 
+	return nil
+}
+
+func MergeUsers(userToEdit *models.User, updates models.User) {
+	existingValues := reflect.ValueOf(userToEdit).Elem()
+	updateValues := reflect.ValueOf(updates)
+
+	for i := 0; i < updateValues.NumField(); i++ {
+		field := updateValues.Field(i)
+		if field.IsValid() && !field.IsZero() {
+			existingValues.Field(i).Set(field)
+		}
+	}
+}
+
+func (r *Repository) UpdateUser(user models.User, id int) error {
+	userToEdit, exists := r.Users[id]
+
+	if !exists {
+		return errors.New("user not found")
+	}
+
+	MergeUsers(&userToEdit, user)
+	r.Users[id] = user
 	return nil
 }
