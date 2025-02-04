@@ -57,3 +57,24 @@ func MapRequestToUser(userRequest models.Request) (models.User, error) {
 
 	return user, nil
 }
+
+func (b *BuisnessLayer) AddUser(userRequest models.Request) error {
+	user, err := MapRequestToUser(userRequest)
+	if err != nil {
+		return err
+	}
+	b.repo.AddUser(user)
+	return nil
+}
+
+func (b *BuisnessLayer) GetAllUsers() []models.User {
+	return b.repo.GetAll()
+}
+
+func (b *BuisnessLayer) GetUser(id int) (models.User, error) {
+	return b.repo.GetUserById(id)
+}
+
+func (b *BuisnessLayer) DeleteUser(id int) error {
+	return b.repo.DeleteUser(id)
+}
