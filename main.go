@@ -1,14 +1,24 @@
 package main
 
 import (
-	"fmt"
 	"projekt/internal/repository"
+	"projekt/internal/services"
+	"projekt/internal/handlers"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	repo := repository.New()
+	bLayer := services.New(repo)
+	handler := handlers.New(bLayer)
 
-	user := repo.Users[0]
+	router := gin.New()
 
-	fmt.Println(user)
+	router.GET("users", handler.GetUsersHandler)
+	router.GET("users/:id", handler.GetUserHandler)
+
+	router.POST("users", handler.AddUserHandler)
+	router.PATCH("users/:id", handler.UpdateUserHandler)
+	router.DELETE("users/:id", handler.DeleteUserHandler)
 }
