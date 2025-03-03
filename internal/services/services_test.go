@@ -127,7 +127,7 @@ func TestUpdateUser(t *testing.T) {
 
 	err := bLayer.UpdateUser(*user, 1)
 	if err != nil {
-		t.Errorf("error hrown: %v", err)
+		t.Errorf("error thrown: %v", err)
 	}
 
 	if repo.Users[1].Age != 15 {
